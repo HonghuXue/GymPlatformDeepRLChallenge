@@ -1,12 +1,8 @@
 #  Multi-Pass Deep Q-Networks
 
-This repository includes a state-of-the-art DRL algorithm solution (MP-DQN) for parameterised action space MDPs:
+This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) for parameterised action space MDPs (PAMDP), after referring to multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references):
 
-1. P-DQN [[Xiong et al. 2018]](https://arxiv.org/abs/1810.06394)
 
-    - MP-DQN [[Bester et al. 2019]](https://arxiv.org/abs/1905.04388)
-    - SP-DQN [[Bester et al. 2019]](https://arxiv.org/abs/1905.04388)
-   
 
 Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P-DQN by splitting the action-parameter inputs to the Q-network using several passes (in a parallel batch). Split Deep Q-Networks (SP-DQN) is a much slower solution which uses multiple Q-networks with/without shared feature-extraction layers. A weighted-indexed action-parameter loss function is also provided for P-DQN.
 
@@ -98,5 +94,12 @@ Monitor the loss function to avoid divergence
 
 ![quantile_huber_loss](runs/quantile_huber_loss.png) 
 
+
+References
+----------
+
+[1] [PA-DDPG](https://arxiv.org/abs/1511.04143)    
+[2] [Q-PAMDP](https://arxiv.org/abs/1509.01644)  
+[3] [P-DQN](https://arxiv.org/abs/1810.06394)   
 
 
