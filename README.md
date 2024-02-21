@@ -21,15 +21,15 @@ In additional to the original implementation, further improvements are integrate
 
 (3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to do minimalistic implementation of DDQN instead of really using 2 running and target networks.
 
-(4) Noisy Network for Exploration.
+(4) Noisy Network for Exploration (additionally includes linear decay for noise during the training stage, so that the training can be accelerated. However it doesn't degrade the exploration as ).
 
-(5) Prioritized Experience Replay.
+(5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration).
 
 These improvements are in orthogonal directions and can be activated in a combinatorial manner.
 
 ## Dependencies
 
-- Python 3.5+ (tested with 3.5 and 3.6)
+- Python 3.5+ (tested with 3.5 & 3.6 & 3.12)
 - pytorch 2.2.0 (1.0+ should work but will be slower)
 - gym 0.10.5
 - numpy
@@ -47,8 +47,7 @@ If something goes wrong, follow the installation instructions given by the repos
 
 ## Example Usage
 
-Each run file has default flags in place, view the run_platform_pdqn.py file for more information. The click flags are configured to make it easier to run experiments and hyper-parameter searches in batches, which is better for scripts but makes it more annoying to type out. 
-It is recommeded to directly run run_platform_pdqn.py in your IDE.
+**It is recommeded to directly run run_platform_pdqn.py in your IDE in this implementation, since the click flags are configured to make it easier to run experiments and hyper-parameter searches in batches, which is better for scripts but makes it more annoying to type out.**
 
 To run vanilla P-DQN on the Platform domain with default flags:
 ```bash
@@ -64,6 +63,12 @@ MP-DQN on the Platform domain with four hidden layers (note no spaces) and the w
 ```bash
 python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weighted True --indexed True
 ```
+
+**The training stage is specified by the number of training episodes. After the training is completed, evaluation is performed by running 3000 episodes in the default configuration.**
+
+
+
+
 
 ## Citing
 
