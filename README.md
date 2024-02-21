@@ -10,6 +10,16 @@ This repository includes a potential DRL algorithm solution for parameterised ac
 
 Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P-DQN by splitting the action-parameter inputs to the Q-network using several passes (in a parallel batch). Split Deep Q-Networks (SP-DQN) is a much slower solution which uses multiple Q-networks with/without shared feature-extraction layers. A weighted-indexed action-parameter loss function is also provided for P-DQN.
 
+## Improvements
+This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master
+Further Improvements are integrated:
+(1) Double Learning for the Q-critic.
+(2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles.
+(3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to do minimalistic implementation of DDQN instead of really using 2 running and target networks.
+(4) Noisy Network for Exploration.
+(5) Prioritized Experience Replay.
+
+
 ## Dependencies
 
 - Python 3.5+ (tested with 3.5 and 3.6)
@@ -49,7 +59,7 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 ```
 
 ## Citing
-This repository is based on the following implementation:
+
 
 ```bibtex
 @article{bester2019mpdqn,
