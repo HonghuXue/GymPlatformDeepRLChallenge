@@ -13,7 +13,7 @@ Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P
 ## Improvements
 This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master
 
-Further Improvements are integrated:
+In additional to the original implementation, further improvements are integrated:
 
 (1) Double Learning for the Q-critic.
 
@@ -25,6 +25,7 @@ Further Improvements are integrated:
 
 (5) Prioritized Experience Replay.
 
+These improvements are in orthogonal directions and can be activated in a combinatorial manner.
 
 ## Dependencies
 
