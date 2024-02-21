@@ -22,6 +22,7 @@ class QActor(nn.Module):
     def __init__(self, state_size, action_size, action_parameter_size, hidden_layers=(100,), action_input_layer=0,
                  output_layer_init_std=None, activation="leaky_relu", **kwargs):
         super(QActor, self).__init__()
+        """Not yet included the noisy network module yet, but unimportant."""
         self.state_size = state_size
         self.action_size = action_size
         self.action_parameter_size = action_parameter_size

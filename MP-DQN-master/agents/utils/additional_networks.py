@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 class NoisyLinear(nn.Module):
     def __init__(self, in_features, out_features, sigma=0.5, noise_decay=True, noise_std_initial=1, noise_std_final=1,
-                 noise_step=10000):
+                 noise_step=20000):
         super(NoisyLinear, self).__init__()
         # --HH: added decaying noise--
         self.noise_decay = noise_decay
