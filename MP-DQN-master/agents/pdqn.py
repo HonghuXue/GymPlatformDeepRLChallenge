@@ -93,6 +93,9 @@ class ParamActor(nn.Module):
         if 'noisy_network' in kwargs:
             self.noisy_network = kwargs['noisy_network']
             self.noisy_network_noise_decay = kwargs['noisy_network_noise_decay']
+            self.noisy_net_noise_initial_std = kwargs['noisy_net_noise_initial_std']
+            self.noisy_net_noise_final_std = kwargs['noisy_net_noise_final_std']
+            self.noisy_net_noise_decay_step = kwargs['noisy_net_noise_decay_step']
         linear = NoisyLinear if self.noisy_network else nn.Linear
 
         # create layers
