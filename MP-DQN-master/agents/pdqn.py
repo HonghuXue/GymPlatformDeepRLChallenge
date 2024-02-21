@@ -104,11 +104,32 @@ class ParamActor(nn.Module):
         lastHiddenLayerSize = inputSize
         if hidden_layers is not None:
             nh = len(hidden_layers)
-            self.layers.append(linear(inputSize, hidden_layers[0]))
+            if self.noisy_network:
+                self.layers.append(linear(inputSize, hidden_layers[0],
+                                          noise_decay=self.noisy_network_noise_decay,
+                                          noise_std_initial=self.noisy_net_noise_initial_std,
+                                          noise_std_final=self.noisy_net_noise_final_std,
+                                          noise_step=self.noisy_net_noise_decay_step))
+            else:
+                self.layers.append(linear(inputSize, hidden_layers[0]))
             for i in range(1, nh):
-                self.layers.append(linear(hidden_layers[i - 1], hidden_layers[i]))
+                if self.noisy_network:
+                    self.layers.append(linear(hidden_layers[i - 1], hidden_layers[i],
+                                              noise_decay=self.noisy_network_noise_decay,
+                                              noise_std_initial=self.noisy_net_noise_initial_std,
+                                              noise_std_final=self.noisy_net_noise_final_std,
+                                              noise_step=self.noisy_net_noise_decay_step))
+                else:
+                    self.layers.append(linear(hidden_layers[i - 1], hidden_layers[i]))
             lastHiddenLayerSize = hidden_layers[nh - 1]
-        self.action_parameters_output_layer = linear(lastHiddenLayerSize, self.action_parameter_size)
+        if self.noisy_network:
+            self.action_parameters_output_layer = linear(lastHiddenLayerSize, self.action_parameter_size,
+                                                        noise_decay=self.noisy_network_noise_decay,
+                                                        noise_std_initial=self.noisy_net_noise_initial_std,
+                                                        noise_std_final=self.noisy_net_noise_final_std,
+                                                        noise_step=self.noisy_net_noise_decay_step)
+        else:
+            self.action_parameters_output_layer = linear(lastHiddenLayerSize, self.action_parameter_size)
         self.action_parameters_passthrough_layer = nn.Linear(self.state_size, self.action_parameter_size)
 
         # initialise layer weights
