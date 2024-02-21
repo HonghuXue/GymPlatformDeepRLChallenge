@@ -76,6 +76,18 @@ Maximual episodic return = 1
 
 ![Training Performance Seed 5](runs/seed_5.png)
 
+- Training Statistics (Seed 4 , IQN + DDQN + TD3 + PER + Noisy Net)
+
+![Training Performance Seed 4](runs/seed_4.png)
+
+- Training Statistics (Seed 3 , IQN + DDQN + TD3 + PER + Noisy Net)
+
+![Training Performance Seed 3](runs/seed_3.png)
+
+- Training Statistics (Seed 2 , IQN + DDQN + TD3 + PER + Noisy Net)
+
+![Training Performance Seed 2](runs/seed_2.png)
+
 
 
 
