@@ -70,11 +70,11 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 
 ## Performance Curve
 
-- Maximual episodic return = 1
+Maximual episodic return = 1
 
-  - Training Statistics (Seed 1~5)
+- Training Statistics (Seed 5 , IQN + DDQN + TD3 + PER + Noisy Net)
 
-![Training Performance Seed 5](runs/seed 5.png)
+![Training Performance Seed 5](runs/seed_5.png)
 
 
 
