@@ -1,6 +1,6 @@
 #  Multi-Pass Deep Q-Networks
 
-This repository includes a potential DRL algorithm solution for parameterised action space MDPs:
+This repository includes a state-of-the-art DRL algorithm solution (MP-DQN) for parameterised action space MDPs:
 
 1. P-DQN [[Xiong et al. 2018]](https://arxiv.org/abs/1810.06394)
 
