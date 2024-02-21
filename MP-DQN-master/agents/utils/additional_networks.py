@@ -40,23 +40,27 @@ class NoisyLinear(nn.Module):
         self.sigma_W.data.fill_(self.sigma / np.sqrt(self.in_features))
         self.sigma_bias.data.fill_(self.sigma / np.sqrt(self.out_features))
 
-    def f(self, x):
-        if self.noise_decay:
-            if self.step < self.noise_step:
-                std = self.noise_std_initial - (self.noise_std_initial - self.noise_std_final) * (
-                        self.step / self.noise_step)
-            else:
-                std = self.noise_std_final
-            return x.normal_(std=std).sign().mul(x.abs().sqrt())
+    def f_decay(self, x):
+        if self.step < self.noise_step:
+            std = self.noise_std_initial - (self.noise_std_initial - self.noise_std_final) * (
+                    self.step / self.noise_step)
         else:
-            return x.normal_().sign().mul(x.abs().sqrt())
+            std = self.noise_std_final
+        return x.normal_(std=std).sign().mul(x.abs().sqrt())
+
+
+    def f(self, x):
+        return x.normal_().sign().mul(x.abs().sqrt())
 
     def sample(self, noise_decay=False):
         """HH: Added decaying noise with on-going training"""
         if noise_decay:
             self.step += 1
-        self.eps_p.copy_(self.f(self.eps_p))
-        self.eps_q.copy_(self.f(self.eps_q))
+            self.eps_p.copy_(self.f_decay(self.eps_p))
+            self.eps_q.copy_(self.f_decay(self.eps_q))
+        else:
+            self.eps_p.copy_(self.f(self.eps_p))
+            self.eps_q.copy_(self.f(self.eps_q))
 
     def forward(self, x):
         if self.training:
