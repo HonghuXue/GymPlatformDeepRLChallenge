@@ -788,8 +788,9 @@ class PDQNAgent(Agent):
             try:  # for the case of delayed_policy_update > 1
                 states = torch.cat((self.state_policy_delayed, states), 0)
                 weights = torch.cat((self.weights, weights), 0)
-                tau_hats = torch.cat((self.tau_hats, tau_hats), 0)
-                taus = torch.cat((self.taus, taus), 0)
+                if self.IQN:
+                    tau_hats = torch.cat((self.tau_hats, tau_hats), 0)
+                    taus = torch.cat((self.taus, taus), 0)
             except:  # for the case of delayed_policy_update = 1
                 pass
 
@@ -855,13 +856,15 @@ class PDQNAgent(Agent):
         elif self.updates % self.delayed_policy_update == 0:
             self.state_policy_delayed = states
             self.weights = weights
-            self.tau_hats = tau_hats
-            self.taus = taus
+            if self.IQN:
+                self.tau_hats = tau_hats
+                self.taus = taus
         else:
             self.state_policy_delayed = torch.cat((self.state_policy_delayed, states), 0)
             self.weights = torch.cat((self.weights, weights), 0)
-            self.tau_hats = torch.cat((self.tau_hats, tau_hats), 0)
-            self.taus = torch.cat((self.taus, taus), 0)
+            if self.IQN:
+                self.tau_hats = torch.cat((self.tau_hats, tau_hats), 0)
+                self.taus = torch.cat((self.taus, taus), 0)
 
         if self.IQN:
             soft_update_target_network(self.quantile_net, self.quantile_net_target, self.tau_actor)
