@@ -74,7 +74,7 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 
   - Training Statistics (Seed 1~5)
 
-![Training Performance Seed 5](runs/seed_5.png)
+![Training Performance Seed 5](runs/seed 5.png)
 
 
 
