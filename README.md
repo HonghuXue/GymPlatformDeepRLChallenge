@@ -83,6 +83,7 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 ![pong_training](assets/pong.png)
 
 
-Just for testing---------------------------------------------------------
+ hahahaha
+
 
 
