@@ -15,15 +15,15 @@ This repository is based on the following implementation: https://github.com/cyc
 
 In additional to the original implementation, further improvements are integrated:
 
-(1) Double Learning for the Q-critic.
+(1) Double Learning for the Q-critic. (https://arxiv.org/abs/1509.06461)
 
-(2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles.
+(2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. (https://arxiv.org/abs/1806.06923)
 
-(3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to do minimalistic implementation of DDQN instead of really using 2 running and target networks.
+(3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to a minimalistic implementation of DDQN instead of really using 2 running and target networks. (https://arxiv.org/pdf/1802.09477.pdf)
 
-(4) Noisy Network for Exploration (additionally includes linear decay for noise during the training stage, so that the training can be accelerated. However it doesn't degrade the exploration as ).
+(4) Noisy Network for Exploration (Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise.) (https://arxiv.org/abs/1706.10295)
 
-(5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration).
+(5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). (https://arxiv.org/abs/1511.05952)
 
 These improvements are in orthogonal directions and can be activated in a combinatorial manner.
 
@@ -67,7 +67,19 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 **The training stage is specified by the number of training episodes. After the training is completed, evaluation is performed by running 3000 episodes in the default configuration.**
 
 
+## Performance Curve
 
+- Pong
+
+  - Trained policy after 5 million frames of training
+
+![pong_after_5M_frames](assets/pong_policy_after_5M_frames.gif)
+
+  - Average Episode Reward: `21` (vs `about 15 @ 5 million frames`, `20.4 @ 10 million frames` from the original NEC paper)
+
+  - Training Statistics
+
+![pong_training](assets/pong.png)
 
 
 ## Citing
