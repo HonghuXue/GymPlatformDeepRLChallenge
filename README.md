@@ -12,11 +12,17 @@ Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P
 
 ## Improvements
 This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master
+
 Further Improvements are integrated:
+
 (1) Double Learning for the Q-critic.
+
 (2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles.
+
 (3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to do minimalistic implementation of DDQN instead of really using 2 running and target networks.
+
 (4) Noisy Network for Exploration.
+
 (5) Prioritized Experience Replay.
 
 
