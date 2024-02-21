@@ -15,15 +15,16 @@ This repository is based on the following implementation: https://github.com/cyc
 
 In additional to the original implementation, further improvements are integrated:
 
-(1) Double Learning for the Q-critic. (https://arxiv.org/abs/1509.06461)
+(1) Double Learning for the Q-critic. [[Hasselt et al. 2015]](https://arxiv.org/abs/1509.06461)
 
-(2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. (https://arxiv.org/abs/1806.06923)
+(2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
 
-(3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to a minimalistic implementation of DDQN instead of really using 2 running and target networks. (https://arxiv.org/pdf/1802.09477.pdf)
+(3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to a minimalistic implementation of DDQN instead of really using 2 running and target networks. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
 
-(4) Noisy Network for Exploration (Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise.) (https://arxiv.org/abs/1706.10295)
+(4) Noisy Network for Exploration (Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise.) [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
 
-(5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). (https://arxiv.org/abs/1511.05952)
+(5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
+
 
 These improvements are in orthogonal directions and can be activated in a combinatorial manner.
 
@@ -82,18 +83,3 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 ![pong_training](assets/pong.png)
 
 
-## Citing
-
-
-```bibtex
-@article{bester2019mpdqn,
-	author    = {Bester, Craig J. and James, Steven D. and Konidaris, George D.},
-	title     = {Multi-Pass {Q}-Networks for Deep Reinforcement Learning with Parameterised Action Spaces},
-	journal   = {arXiv preprint arXiv:1905.04388},
-	year      = {2019},
-	archivePrefix = {arXiv},
-	eprinttype    = {arxiv},
-	eprint    = {1905.04388},
-	url       = {http://arxiv.org/abs/1905.04388},
-}
-```
