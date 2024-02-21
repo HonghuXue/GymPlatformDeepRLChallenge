@@ -38,7 +38,7 @@ def evaluate(env, agent, episodes=1000):
 
 
 @click.command()
-@click.option('--seed', default=2, help='Random seed.', type=int)
+@click.option('--seed', default=3, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=3000, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=200000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
@@ -85,7 +85,7 @@ def evaluate(env, agent, episodes=1000):
 @click.option('--noisy_network', default=True, help="noisy network for exploration", type=bool)
 @click.option('--noisy_network_noise_decay', default=True, help="noise linear decay", type=bool) # seemingly only degrade the performance
 @click.option('--noisy_net_noise_initial_std', default=1, help="noisy network noise initial std", type=float)
-@click.option('--noisy_net_noise_final_std', default=0.001, help="noisy network noise final std", type=float)
+@click.option('--noisy_net_noise_final_std', default=0.01, help="noisy network noise final std", type=float)
 @click.option('--noisy_net_noise_decay_step', default=2, help="noisy network noise std linear decay step", type=float)
 @click.option('--iqn', default=True, help="implicit quantile network", type=bool)
 @click.option('--iqn_embedding_size', default=64, help="IQN embedding size for tau and (s,a)", type=int)
