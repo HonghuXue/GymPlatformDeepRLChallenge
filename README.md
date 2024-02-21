@@ -70,20 +70,16 @@ python run_platform_pdqn.py  --multipass True --layers [1024,512,256,128] --weig
 
 ## Performance Curve
 
-- Pong
+- Maximual episodic return = 1
 
-  - Trained policy after 5 million frames of training
+  - Training Statistics (Seed 1~5)
 
-![pong_after_5M_frames](assets/pong_policy_after_5M_frames.gif)
-
-  - Average Episode Reward: `21` (vs `about 15 @ 5 million frames`, `20.4 @ 10 million frames` from the original NEC paper)
-
-  - Training Statistics
-
-![pong_training](assets/pong.png)
+![Training Performance Seed 5](runs/seed 5.png)
 
 
-  hahahaha
+
+
+  
 
 
 
