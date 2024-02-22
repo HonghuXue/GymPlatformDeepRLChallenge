@@ -29,9 +29,9 @@ In additional to the original implementation, further improvements are integrate
 - Python 3.5+ (tested with 3.5 & 3.6 & 3.12)
 - pytorch 2.2.0 (1.0+ should work but will be slower)
 - gym 0.10.5
-- numpy
-- click
-- tensorboard
+- numpy 1.26.4
+- click 8.1.7 
+- tensorboard 2.16.2
 
 The code is successfully tested in win11.
 <!---## Domains
