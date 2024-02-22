@@ -101,11 +101,11 @@ Maximual episodic return = 1
 
 Monitor the loss function to avoid divergence
 
-- quantile loss (IQN + DDQN + TD3 + PER + Noisy Net)
+- quantile loss (IQN + DDQN + TD3 + PER + Noisy Net), showing convergence properties.
 
 ![quantile_huber_loss](runs/quantile_huber_loss.png) 
 
-- Q-loss for the actor update (IQN + DDQN + TD3 + PER + Noisy Net)
+- Q-loss for the actor update (IQN + DDQN + TD3 + PER + Noisy Net), exhibiting convergence.
 
 ![actor-Q-loss](runs/Q_loss.png) 
 
