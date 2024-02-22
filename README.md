@@ -33,6 +33,7 @@ In additional to the original implementation, further improvements are integrate
 - click
 - tensorboard
 
+The code is successfully tested in win11.
 <!---## Domains
 
 The simplest installation method for the above OpenAI Gym environments is as follows:
