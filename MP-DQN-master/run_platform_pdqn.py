@@ -42,7 +42,7 @@ def evaluate(env, agent, visualise, episodes=1000):
 @click.command()
 @click.option('--seed', default=4, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
-@click.option('--episodes', default=95000, help='Number of episodes.', type=int)
+@click.option('--episodes', default=200000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
 @click.option('--gamma', default=0.99, help='Discount factor.', type=float) # HH: Changed from 0.9 to 0.99
 @click.option('--inverting-gradients', default=True,
@@ -268,7 +268,7 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
                 print('Episode:{0:5s} Step:{1:8s} Averaged return:{2:.4f} Most recent 100 returns:{3:.4f}'.format(str(i), str(agent._step), total_reward / (i + 1), np.array(returns[-100:]).mean()))
             writer.add_scalar("Returns/returns", episode_reward, i)
             if i % 20000 == 0:
-                writer.flush()
+                writer.flush() # 666
 
         end_time = time.time()
         print("Took %.2f seconds" % (end_time - start_time))
