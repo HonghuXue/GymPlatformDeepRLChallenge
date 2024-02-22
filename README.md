@@ -6,7 +6,7 @@ This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bes
 
 Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P-DQN by splitting the action-parameter inputs to the Q-network using several passes (in a parallel batch). Split Deep Q-Networks (SP-DQN) is a much slower solution which uses multiple Q-networks with/without shared feature-extraction layers. A weighted-indexed action-parameter loss function is also provided for P-DQN.
 
-## Novel Improvements from Honghu
+## Additional Features from Honghu
 This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master
 
 In additional to the original implementation, further improvements are integrated:
@@ -17,7 +17,7 @@ In additional to the original implementation, further improvements are integrate
 
 (3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to a minimalistic implementation of DDQN instead of really using 2 running and target networks. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
 
-(4) Noisy Network for Exploration (Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor) [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
+(4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
 
 (5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
 
@@ -91,10 +91,20 @@ Maximual episodic return = 1
 
 Monitor the loss function to avoid divergence
 
-- An example of quantile loss (IQN + DDQN + TD3 + PER + Noisy Net)
+- quantile loss (IQN + DDQN + TD3 + PER + Noisy Net)
 
 ![quantile_huber_loss](runs/quantile_huber_loss.png) 
 
+- estimated Q-value that is maximized from the sampled batch during the training episode
+
+![estimated_Q_max](runs/estimated_Q_max.png) 
+
+
+## Evaluation Animation
+
+Trained policy after ~2 million frames of training
+
+![evaluation](runs/evaluation.gif)
 
 References
 ----------
