@@ -117,9 +117,14 @@ The evolution of the estimated Q-values are reasonable as the episodic return li
 
 ## Evaluation Animation
 
+Trained policy after 20K episodes of training
+
+![evaluation_20000epi](runs/evaluation_20000.gif)
+
+
 Trained policy after ~2 million frames a.k.a 60K episodes of training
 
-![evaluation](runs/evaluation.gif)
+![evaluation_60000epi](runs/evaluation.gif)
 
 References
 ----------
