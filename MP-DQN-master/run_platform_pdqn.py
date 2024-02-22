@@ -70,7 +70,6 @@ def evaluate(env, agent, episodes=1000):
 @click.option('--layers', default='[32,32]', help='Duplicate action-parameter inputs.', cls=ClickPythonLiteralOption) # HH: [128,]
 @click.option('--save-freq', default=20000, help='How often to save models (0 = never).', type=int)
 @click.option('--save-dir', default="results/platform", help='Output directory.', type=str)
-@click.option('--evaluation_mode', default=False, help='Directly load the trained models for evaluation', type=bool)
 @click.option('--render-freq', default=50000, help='How often to render / save frames of an episode.', type=int)
 @click.option('--save-frames', default=True, help="Save render frames from the environment. Incompatible with visualise.", type=bool)
 @click.option('--visualise', default=False, help="Render game states. Incompatible with save-frames.", type=bool)
@@ -87,13 +86,15 @@ def evaluate(env, agent, episodes=1000):
 @click.option('--noisy_network_noise_decay', default=False, help="noise linear decay", type=bool) # seemingly only degrade the performance
 @click.option('--noisy_net_noise_initial_std', default=1, help="noisy network noise initial std", type=float)
 @click.option('--noisy_net_noise_final_std', default=0.001, help="noisy network noise final std", type=float)
-@click.option('--noisy_net_noise_decay_step', default=2, help="noisy network noise std linear decay step", type=float)
+@click.option('--noisy_net_noise_decay_step', default=1, help="noisy network noise std linear decay step", type=float)
 @click.option('--iqn', default=True, help="implicit quantile network", type=bool)
 @click.option('--iqn_embedding_size', default=64, help="IQN embedding size for tau and (s,a)", type=int)
 @click.option('--iqn_quantile_num', default=8, help="IQN quantile number", type=int)
 @click.option('--iqn_num_cosines', default=64, help="IQN cosine number", type=int)
 @click.option('--iqn_embedding_layers', default='[32]', help='IQN embedding network', cls=ClickPythonLiteralOption)
 @click.option('--iqn_quantile_layers', default='[32,32]', help='IQN quantile network', cls=ClickPythonLiteralOption)
+@click.option('--evaluation_mode', default=True, help='Directly load the trained models for evaluation', type=bool)
+@click.option('--load_model_idx', default=60000, help='load the i-th modelUpdate for evaluation', type=int)
 def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradients, initial_memory_threshold,
         replay_memory_size, epsilon_steps, tau_actor, tau_actor_param, use_ornstein_noise, learning_rate_actor,
         learning_rate_actor_param, epsilon_final, zero_index_gradients, initialise_params, scale_actions,
@@ -101,7 +102,8 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
         save_freq, save_dir, save_frames, visualise, action_input_layer, title, train_interval, ddqn, delayed_policy_update,
         td3_target_policy_smoothing, td3_policy_noise_std, td3_policy_noise_clamp, per, per_no_is, noisy_network,
         noisy_network_noise_decay, noisy_net_noise_initial_std, noisy_net_noise_final_std, noisy_net_noise_decay_step,
-        iqn, iqn_embedding_size, iqn_quantile_num, iqn_num_cosines, iqn_embedding_layers, iqn_quantile_layers, evaluation_mode):
+        iqn, iqn_embedding_size, iqn_quantile_num, iqn_num_cosines, iqn_embedding_layers, iqn_quantile_layers,
+        evaluation_mode, load_model_idx):
 
     writer = SummaryWriter('../runs/')
 
@@ -282,7 +284,7 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
     #-------------------start evaluation------------------
     if evaluation_episodes:
         # load models
-        agent.load_models(os.path.join(save_dir, str(i)))
+        agent.load_models(os.path.join(save_dir, str(load_model_idx)))
 
     if evaluation_episodes > 0:
         print("Evaluating agent over {} episodes".format(evaluation_episodes))
