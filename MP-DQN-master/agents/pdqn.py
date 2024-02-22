@@ -6,6 +6,8 @@ import numpy as np
 import math as ms
 import random
 from collections import Counter
+
+from torch import device
 from torch.autograd import Variable
 from copy import deepcopy
 
@@ -191,6 +193,7 @@ class PDQNAgent(Agent):
     DDPG actor-critic agent for parameterised action spaces
     [Hausknecht and Stone 2016]
     """
+    device: device
     NAME = "P-DQN Agent"
 
     def __init__(self,
@@ -492,7 +495,7 @@ class PDQNAgent(Agent):
                 if self.IQN:
                     self.sa_embedding_net.sample_noise(noise_decay=False)
                     self.quantile_net.sample_noise(noise_decay=False)
-                    self.cosine_net.sample_noise(noise_decay=False)
+                    # self.cosine_net.sample_noise(noise_decay=False)
                 else:
                     self.actor.sample_noise(noise_decay=False)
 
@@ -881,7 +884,12 @@ class PDQNAgent(Agent):
         :param prefix: the count of episodes iterated
         :return:
         """
-        torch.save(self.actor.state_dict(), prefix + '_actor.pt')
+        if self.IQN:
+            torch.save(self.sa_embedding_net.state_dict(), prefix + '_sa_embedding_net.pt')
+            torch.save(self.quantile_net.state_dict(), prefix + '_quantile_net.pt')
+            torch.save(self.cosine_net.state_dict(), prefix + '_cosine_net.pt')
+        else:
+            torch.save(self.actor.state_dict(), prefix + '_actor.pt')
         torch.save(self.actor_param.state_dict(), prefix + '_actor_param.pt')
         print('Models saved successfully')
 
@@ -893,6 +901,11 @@ class PDQNAgent(Agent):
         :return:
         """
         # also try load on CPU if no GPU available?
-        self.actor.load_state_dict(torch.load(prefix + '_actor.pt', map_location='cpu'))
-        self.actor_param.load_state_dict(torch.load(prefix + '_actor_param.pt', map_location='cpu'))
+        if self.IQN:
+            self.sa_embedding_net.load_state_dict(torch.load(prefix + '_sa_embedding_net.pt', map_location=self.device))
+            self.quantile_net.load_state_dict(torch.load(prefix + '_quantile_net.pt', map_location=self.device))
+            self.cosine_net.load_state_dict(torch.load(prefix + '_cosine_net.pt', map_location=self.device))
+        else:
+            self.actor.load_state_dict(torch.load(prefix + '_actor.pt', map_location=self.device))
+        self.actor_param.load_state_dict(torch.load(prefix + '_actor_param.pt', map_location=self.device))
         print('Models loaded successfully')
