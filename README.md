@@ -22,7 +22,7 @@ In additional to the original implementation, further improvements are integrate
 (5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
 
 
-These improvements are in orthogonal directions and can be activated in a combinatorial manner.
+**These improvements are in orthogonal directions and can be activated in a combinatorial manner.**
 
 ## Dependencies
 
