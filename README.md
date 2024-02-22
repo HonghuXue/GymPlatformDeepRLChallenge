@@ -105,6 +105,10 @@ Monitor the loss function to avoid divergence
 
 ![quantile_huber_loss](runs/quantile_huber_loss.png) 
 
+- Q-loss for the actor update (IQN + DDQN + TD3 + PER + Noisy Net)
+
+![actor-Q-loss](runs/Q_loss.png) 
+
 - estimated Q-value that is maximized from the sampled batch during the training episode
 
 ![estimated_Q_max](runs/estimated_Q_max.png) 
