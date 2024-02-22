@@ -39,7 +39,7 @@ def evaluate(env, agent, visualise, episodes=1000):
     return np.array(returns)
 
 
-@click.option('--seed', default=4, help='Random seed.', type=int)
+@click.option('--seed', default=1, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=95000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
@@ -303,4 +303,3 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
 
 if __name__ == '__main__':
     run()
-    # 666
