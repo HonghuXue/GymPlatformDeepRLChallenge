@@ -711,7 +711,7 @@ class PDQNAgent(Agent):
 
             with torch.no_grad():
                 # Calculate Q values of next states.
-                if self.double_learning:  # double Q-learning
+                if self.double_learning:  #haha
                     # ------next_q = self.online_net.calculate_q(states=next_states) # (Batch, |A|)------
                     pred_next_action_parameters = self.actor_param.forward(next_states)
                     next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
