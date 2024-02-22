@@ -99,6 +99,7 @@ Monitor the loss function to avoid divergence
 
 ![estimated_Q_max](runs/estimated_Q_max.png) 
 
+The evolution of the estimated Q-values are reasonable as the episodic return lies between 0 and 1. When consiering the the discount factor = 0.99, the estimated Q-value should be within this range.
 
 ## Evaluation Animation
 
