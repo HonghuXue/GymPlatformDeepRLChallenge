@@ -29,9 +29,9 @@ In additional to the original implementation, further improvements are integrate
 - Python 3.5+ (tested with 3.5 & 3.6 & 3.12)
 - pytorch 2.2.0 (1.0+ should work but will be slower)
 - gym 0.10.5
-- numpy
-- click
-- tensorboard
+- numpy 1.26.4
+- click 8.1.7 
+- tensorboard 2.16.2
 
 The code is successfully tested in win11.
 <!---## Domains
@@ -45,7 +45,17 @@ If something goes wrong, follow the installation instructions given by the repos
 
 ## Example Usage
 
-It is recommeded to directly run run_platform_pdqn.py in your IDE in this implementation, since the click flags are configured to make it easier to run experiments and hyper-parameter searches in batches, which is better for scripts but makes it more annoying to type out.
+**Learning from scratch**
+
+It is recommeded to directly run *run_platform_pdqn.py* in your IDE in this implementation, since the click flags are configured to make it easier to run experiments and hyper-parameter searches in batches, which is better for scripts but makes it more annoying to type out.
+
+**Load a trained Model**
+
+please set the following parameters in the **click options** in *run_platform_pdqn.py*
+```bash
+"evaluation_mode = True", "seed = 5" and "load_model_idx = 60000"
+```
+
 <!---
 To run vanilla P-DQN on the Platform domain with default flags:
 ```bash
@@ -99,10 +109,11 @@ Monitor the loss function to avoid divergence
 
 ![estimated_Q_max](runs/estimated_Q_max.png) 
 
+The evolution of the estimated Q-values are reasonable as the episodic return lies between 0 and 1. When consiering the the discount factor = 0.99, the estimated Q-value should be within this range.
 
 ## Evaluation Animation
 
-Trained policy after ~2 million frames of training
+Trained policy after ~2 million frames a.k.a 60K episodes of training
 
 ![evaluation](runs/evaluation.gif)
 
