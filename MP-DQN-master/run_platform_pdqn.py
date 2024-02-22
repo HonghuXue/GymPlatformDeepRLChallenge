@@ -40,7 +40,7 @@ def evaluate(env, agent, episodes=1000):
 @click.command()
 @click.option('--seed', default=5, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=3000, help='Episodes over which to evaluate after training.', type=int)
-@click.option('--episodes', default=10, help='Number of episodes.', type=int)
+@click.option('--episodes', default=200000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
 @click.option('--gamma', default=0.99, help='Discount factor.', type=float) # HH: Changed from 0.9 to 0.99
 @click.option('--inverting-gradients', default=True,
@@ -68,7 +68,7 @@ def evaluate(env, agent, episodes=1000):
 @click.option('--zero-index-gradients', default=False, help="Whether to zero all gradients for action-parameters not corresponding to the chosen action.", type=bool)
 @click.option('--action-input-layer', default=0, help='Which layer to input action parameters.', type=int)
 @click.option('--layers', default='[32,32]', help='Duplicate action-parameter inputs.', cls=ClickPythonLiteralOption) # HH: [128,]
-@click.option('--save-freq', default=1, help='How often to save models (0 = never).', type=int)
+@click.option('--save-freq', default=20000, help='How often to save models (0 = never).', type=int)
 @click.option('--save-dir', default="results/platform", help='Output directory.', type=str)
 @click.option('--evaluation_mode', default=False, help='Directly load the trained models for evaluation', type=bool)
 @click.option('--render-freq', default=50000, help='How often to render / save frames of an episode.', type=int)
@@ -84,7 +84,7 @@ def evaluate(env, agent, episodes=1000):
 @click.option('--per', default=True, help="prioritized experience replay", type=bool)
 @click.option('--per_no_is', default=True, help="cancel the IS weights in PER", type=bool)
 @click.option('--noisy_network', default=True, help="noisy network for exploration", type=bool)
-@click.option('--noisy_network_noise_decay', default=True, help="noise linear decay", type=bool) # seemingly only degrade the performance
+@click.option('--noisy_network_noise_decay', default=False, help="noise linear decay", type=bool) # seemingly only degrade the performance
 @click.option('--noisy_net_noise_initial_std', default=1, help="noisy network noise initial std", type=float)
 @click.option('--noisy_net_noise_final_std', default=0.001, help="noisy network noise final std", type=float)
 @click.option('--noisy_net_noise_decay_step', default=2, help="noisy network noise std linear decay step", type=float)
@@ -220,8 +220,8 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
     # agent.noise = None
     if not evaluation_mode:
         for i in range(episodes):
-            # if save_freq > 0 and save_dir and i % save_freq == 0:
-            #     agent.save_models(os.path.join(save_dir, str(i)))
+            if save_freq > 0 and save_dir and i % save_freq == 0:
+                agent.save_models(os.path.join(save_dir, str(i)))
             state, _ = env.reset()
             state = np.array(state, dtype=np.float32, copy=False)
             if visualise and i % render_freq == 0:

@@ -335,7 +335,7 @@ class PDQNAgent(Agent):
             self.actor_target = actor_class(self.observation_space.shape[0], self.num_actions,
                                             self.action_parameter_size, **actor_kwargs).to(device)
             hard_update_target_network(self.actor, self.actor_target)
-            self.actor_target.eval()
+            # self.actor_target.eval()# Note : this will deactivate noisy net for exploration
         else:
             self.sa_embedding_net = StateActionEmbeddingNetwork(self.observation_space.shape[0], self.num_actions,
                                                                 self.action_parameter_sizes, **actor_kwargs).to(device)
@@ -355,16 +355,17 @@ class PDQNAgent(Agent):
             hard_update_target_network(self.sa_embedding_net, self.sa_embedding_net_target)
             hard_update_target_network(self.cosine_net, self.cosine_net_target)
             hard_update_target_network(self.quantile_net, self.quantile_net_target)
-            self.sa_embedding_net_target.eval()
-            self.cosine_net_target.eval()
-            self.quantile_net_target.eval()
+            #----------------Note : this will deactivate noisy net for exploration----------------
+            # self.sa_embedding_net_target.eval()
+            # self.cosine_net_target.eval()
+            # self.quantile_net_target.eval()
 
         self.actor_param = actor_param_class(self.observation_space.shape[0], self.num_actions,
                                              self.action_parameter_size, **actor_param_kwargs).to(device)
         self.actor_param_target = actor_param_class(self.observation_space.shape[0], self.num_actions,
                                                     self.action_parameter_size, **actor_param_kwargs).to(device)
         hard_update_target_network(self.actor_param, self.actor_param_target)
-        self.actor_param_target.eval()
+        # self.actor_param_target.eval() # ----Note : this will deactivate noisy net for exploration----
 
         # HH:
         if self.PER:
@@ -619,8 +620,8 @@ class PDQNAgent(Agent):
                 self.actor.sample_noise(self.noisy_network_noise_decay)
                 self.actor_target.sample_noise(self.noisy_network_noise_decay)
                 #---- below is for trialing---
-                # self.actor_param.sample_noise(self.noisy_network_noise_decay)
-                # self.actor_param_target.sample_noise(self.noisy_network_noise_decay)
+                self.actor_param.sample_noise(self.noisy_network_noise_decay)
+                self.actor_param_target.sample_noise(self.noisy_network_noise_decay)
             else:
                 self.quantile_net.sample_noise(self.noisy_network_noise_decay)
                 self.sa_embedding_net.sample_noise(self.noisy_network_noise_decay)
