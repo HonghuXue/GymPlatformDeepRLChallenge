@@ -42,7 +42,7 @@ def evaluate(env, agent, visualise, episodes=1000):
 @click.command()
 @click.option('--seed', default=4, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
-@click.option('--episodes', default=200000, help='Number of episodes.', type=int)
+@click.option('--episodes', default=95000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
 @click.option('--gamma', default=0.99, help='Discount factor.', type=float) # HH: Changed from 0.9 to 0.99
 @click.option('--inverting-gradients', default=True,
