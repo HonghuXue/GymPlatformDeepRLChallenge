@@ -51,7 +51,7 @@ def evaluate(env, agent, visualise, episodes=1000):
               type=int)  # HH: Changed from 500 to 10000
 @click.option('--use-ornstein-noise', default=False,
               help='Use Ornstein noise instead of epsilon-greedy with uniform random exploration.', type=bool)
-@click.option('--replay-memory-size', default=65536, help='Replay memory size in transitions.', type=int) # HH: changed from 10000 to 500000
+@click.option('--replay-memory-size', default=131072, help='Replay memory size in transitions.', type=int) # HH: changed from 10000 to 500000
 @click.option('--epsilon-steps', default=20000, help='Number of episodes over which to linearly anneal epsilon.', type=int) # HH: changed from 1000 to 5000
 @click.option('--epsilon-final', default=0.05, help='Final epsilon value.', type=float) # HH: to be changed from 0.01
 @click.option('--tau-actor', default=0.0025, help='Soft target network update averaging factor.', type=float) # tau_actor too  HH: changed from 0.1 to 0.001
