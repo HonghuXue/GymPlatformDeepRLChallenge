@@ -45,7 +45,17 @@ If something goes wrong, follow the installation instructions given by the repos
 
 ## Example Usage
 
-It is recommeded to directly run run_platform_pdqn.py in your IDE in this implementation, since the click flags are configured to make it easier to run experiments and hyper-parameter searches in batches, which is better for scripts but makes it more annoying to type out.
+**Learning from scratch**
+
+It is recommeded to directly run *run_platform_pdqn.py* in your IDE in this implementation, since the click flags are configured to make it easier to run experiments and hyper-parameter searches in batches, which is better for scripts but makes it more annoying to type out.
+
+**Load a trained Model**
+
+please set the following parameters in the **click options** in *run_platform_pdqn.py*
+```bash
+"evaluation_mode = True", "seed = 5" and "load_model_idx = 60000"
+```
+
 <!---
 To run vanilla P-DQN on the Platform domain with default flags:
 ```bash
