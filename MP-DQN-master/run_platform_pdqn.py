@@ -38,7 +38,7 @@ def evaluate(env, agent, visualise, episodes=1000):
     # return np.column_stack((returns, timesteps))
     return np.array(returns)
 
-
+@click.command()
 @click.option('--seed', default=1, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=95000, help='Number of episodes.', type=int)
