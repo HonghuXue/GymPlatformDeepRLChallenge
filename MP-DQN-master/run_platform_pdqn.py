@@ -39,7 +39,6 @@ def evaluate(env, agent, visualise, episodes=1000):
     return np.array(returns)
 
 
-@click.command()
 @click.option('--seed', default=4, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=95000, help='Number of episodes.', type=int)
@@ -74,7 +73,7 @@ def evaluate(env, agent, visualise, episodes=1000):
 @click.option('--save-dir', default="results/platform", help='Output directory.', type=str)
 @click.option('--render-freq', default=50000, help='How often to render / save frames of an episode.', type=int)
 @click.option('--save-frames', default=False, help="Save render frames from the environment. Incompatible with visualise.", type=bool)
-@click.option('--visualise', default=True, help="Render game states. Incompatible with save-frames.", type=bool)
+@click.option('--visualise', default=False, help="Render game states. Incompatible with save-frames.", type=bool)
 @click.option('--title', default="PDDQN", help="Prefix of output files", type=str)
 @click.option('--train_interval', default=16, help="Double Learning for updating Q-value", type=int)
 @click.option('--ddqn', default=True, help="Double Learning for updating Q-value", type=bool)
@@ -304,3 +303,4 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
 
 if __name__ == '__main__':
     run()
+    # 666
