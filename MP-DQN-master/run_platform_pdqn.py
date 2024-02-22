@@ -267,8 +267,8 @@ def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradie
             if i % 100 == 0:
                 print('Episode:{0:5s} Step:{1:8s} Averaged return:{2:.4f} Most recent 100 returns:{3:.4f}'.format(str(i), str(agent._step), total_reward / (i + 1), np.array(returns[-100:]).mean()))
             writer.add_scalar("Returns/returns", episode_reward, i)
-            # if i % 20000 == 0:
-        writer.flush()
+            if i % 20000 == 0:
+                writer.flush()
 
         end_time = time.time()
         print("Took %.2f seconds" % (end_time - start_time))
