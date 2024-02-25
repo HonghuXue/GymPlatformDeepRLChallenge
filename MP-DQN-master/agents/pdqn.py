@@ -665,6 +665,7 @@ class PDQNAgent(Agent):
                     Qprime = torch.max(pred_Q_a, 1, keepdim=True)[0].squeeze()
             # HH:--Proposed implementation :DDQN---
             else:
+                # -----First DDQN mode: y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),------
                 with torch.no_grad():
                     pred_next_action_parameters_running = self.actor_param.forward(next_states)
                     pred_next_action_parameters = self.actor_param_target.forward(next_states)
@@ -675,6 +676,18 @@ class PDQNAgent(Agent):
                     pred_Q_a = self.actor_target(next_states, pred_next_action_parameters)
                     Qprime = pred_Q_a.gather(1, torch.max(pred_Q_a_tmp, 1)[1].unsqueeze(1)).squeeze(1)
 
+
+                # ----Alternative DDQN: y = r + \gamma (1 - d) \min (Q_{\phi}(s', \mu_{\theta'}(s')),  Q_{\phi'}(s', \mu_{\theta'}(s')) ) -----
+                # with torch.no_grad():
+                #     pred_next_action_parameters = self.actor_param_target.forward(next_states)
+                #     if self.td3_target_policy_smoothing:
+                #         pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
+                #                                                                 running_actor_param_network=False)
+                #     pred_Q_a_run = self.actor(next_states, pred_next_action_parameters)
+                #     Qprime_run = torch.max(pred_Q_a_run, 1, keepdim=True)[0].squeeze()
+                #     pred_Q_a_target = self.actor_target(next_states, pred_next_action_parameters)
+                #     Qprime_target = torch.max(pred_Q_a_target, 1, keepdim=True)[0].squeeze()
+                #     Qprime = torch.min(Qprime_target, Qprime_run)
             # Compute the TD error
             with torch.no_grad():
                 target = rewards + (1 - terminals) * self.gamma * Qprime
@@ -710,6 +723,7 @@ class PDQNAgent(Agent):
             # assert current_sa_quantiles.shape == (self.batch_size, self.N, 1)
 
             with torch.no_grad():
+                # -----First DDQN mode: y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),------
                 # Calculate Q values of next states.
                 if self.double_learning:
                     # ------First get the Q-max from the online network: next_q = self.online_net.calculate_q(states=next_states) # (Batch, |A|)------
@@ -736,9 +750,7 @@ class PDQNAgent(Agent):
                         dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
                     # ------------------------------------------------
                 # Calculate greedy actions.
-                next_actions = torch.argmax(next_q, dim=1,
-                                            keepdim=False)  # assert next_actions.shape == (self.batch_size, 1)
-
+                next_actions = torch.argmax(next_q, dim=1, keepdim=False)  # assert next_actions.shape == (self.batch_size, 1)
                 # Calculate features of next states.
                 if self.double_learning:
                     # --------next_state_embeddings = self.target_net.calculate_state_embeddings(next_states)---------
