@@ -7,9 +7,9 @@ This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bes
 Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P-DQN by splitting the action-parameter inputs to the Q-network using several passes (in a parallel batch). Split Deep Q-Networks (SP-DQN) is a much slower solution which uses multiple Q-networks with/without shared feature-extraction layers. A weighted-indexed action-parameter loss function is also provided for P-DQN.
 
 ## Additional Features from Honghu
-This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master
+This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master, which includes the orignal MP-DQN implementation.
 
-In additional to the original implementation, further improvements are integrated:
+In additional to the original implementation, further improvements are integrated: **These improvements are in orthogonal directions and can be activated in a combinatorial manner.**
 
 ### (1) Double Learning for the Q-critic (DDQN). [[Hasselt et al. 2015]](https://arxiv.org/abs/1509.06461)
 DDQN is introduced to cancel maximization bias. The key equation for TD-target $`y`$ goes as:
@@ -18,10 +18,7 @@ DDQN is introduced to cancel maximization bias. The key equation for TD-target $
 ```
 where $`\phi`$ and $`\phi'`$ denote the parameters of running network and target network respectively.
 
-### (2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
-
-### (3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
-
+### (2) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
 
 **target policy smoothing**: Actions used to form the Q-learning target are based on the target policy, $`\mu_{\theta_{\text{targ}}}`$, but with clipped noise added on each dimension of the action. After adding the clipped noise, the target action is then clipped to lie in the valid action range (all valid actions, $`a`$, satisfy $`a_{Low} \leq a \leq a_{High})`$. The target actions are thus: 
 
@@ -40,12 +37,31 @@ However, I refer to a minimalistic implementation of DDQN instead of really usin
 ```
 where $`\mu_{\theta}'`$ stands for the running actor network and $`a' = \mu_{\theta}(s')`$ represents the action that maximizes the Q-value of $`s'`$ in the running network. This shares the same idea of DDQN.
 
-(4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
 
-(5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
-For a
+### (3) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
 
-**These improvements are in orthogonal directions and can be activated in a combinatorial manner.**
+
+
+### (4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
+
+In this implementation, the noisy network is applied to DDPG/TD3 actor and Q-network. In the IQN mode, noisy network is applied to DDPG/TD3 actor, quantile network, state-action embedding network, but excluding the cosine network. Theoretically, cosine network could also use noisy network.
+
+
+### (5) Proportion-based Prioritized Experience Replay [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
+The idea of PER is to prioritized sampling the experiences featuring large TD-loss, resulting in a new proposal distribution. Importance-sampling ratio is then included for each sample to make each sample is still sampled as if from a uniform distribution, i.e., target distribution. For a detailed understanding, please refer to https://danieltakeshi.github.io/2019/07/14/per/ .
+In this implementation, the replay buffer size must be of the size $`2^n`$ (due to sum-tree structure), as the semi-roulette-wheel sampling strategy is applied to reduce the sampling variance, which is exactly suggested in the original work. 
+
+The IS-ratio $`w`$ in the original work goes as:
+```math
+    w_{i} = \frac{\left( \frac{1}{N} \cdot \frac{1}{P(i)} \right)^{\beta}}{w_{max}},
+```
+where $`N`$ refers to the current experience replay size, and $`P(i)`$ represents the probability of sampling data point $`i`$ according to priorities and $`w_{max}`$ refers to the maiximal IS-ratio value among all the stored experience. 
+
+However, I found IS-ratio could result in a slow learning and osciallation in Q-value estimates due to the boostrapping nature. Therefore, I set IS-ratio for each samples to just be $`1`$, i.e., without "IS-ratio integration".
+
+
+
+
 
 
 
