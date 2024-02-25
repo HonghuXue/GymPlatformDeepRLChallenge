@@ -11,18 +11,44 @@ This repository is based on the following implementation: https://github.com/cyc
 
 In additional to the original implementation, further improvements are integrated:
 
-(1) Double Learning for the Q-critic. [[Hasselt et al. 2015]](https://arxiv.org/abs/1509.06461)
+### (1) Double Learning for the Q-critic (DDQN). [[Hasselt et al. 2015]](https://arxiv.org/abs/1509.06461)
+DDQN is introduced to cancel maximization bias. The key equation for TD-target $`y`$ goes as:
+```math
+    y = r + \gamma (1 - d) Q_{\phi'}(s', \text{argmax}_{a'}Q_{\phi}(s',a')),
+```
+where $`\phi`$ and $`\phi'`$ denote the parameters of running network and target network respectively.
 
-(2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
+### (2) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
 
-(3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. For Double learning, I refer to a minimalistic implementation of DDQN instead of really using 2 running and target networks. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
+### (3) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
+
+
+**target policy smoothing**: Actions used to form the Q-learning target are based on the target policy, $`\mu_{\theta_{\text{targ}}}`$, but with clipped noise added on each dimension of the action. After adding the clipped noise, the target action is then clipped to lie in the valid action range (all valid actions, $`a`$, satisfy $`a_{Low} \leq a \leq a_{High})`$. The target actions are thus: 
+
+```math
+    a'(s') = \text{clip}\left(\mu_{\theta_{\text{targ}}}(s') + \text{clip}(\epsilon,-c,c), a_{Low}, a_{High}\right), \;\;\;\;\; \epsilon \sim \mathcal{N}(0, \sigma)
+```
+
+**clipped double Q-learning**:
+In the original implementation, the key equation for TD-target $`y`$ goes as:
+```math
+    y = r + \gamma (1 - d) \min_{i=1,2} Q_{\phi_{i, \text{targ}}}(s', a'(s')),
+```
+However, I refer to a minimalistic implementation of DDQN instead of really using two running and target networks, as MP-DQN finally learns the Q-value in discrete action space. And the equation is as follows:
+```math
+    y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),
+```
+where $`\mu_{\theta}'`$ stands for the running actor network and $`a' = \mu_{\theta}(s')`$ represents the action that maximizes the Q-value of $`s'`$ in the running network. This shares the same idea of DDQN.
 
 (4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
 
 (5) Prioritized Experience Replay (both with IS-ratio integration and without IS-ratio integration). [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
-
+For a
 
 **These improvements are in orthogonal directions and can be activated in a combinatorial manner.**
+
+
+
 
 ## Dependencies
 
