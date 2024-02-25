@@ -39,7 +39,7 @@ def evaluate(env, agent, visualise, episodes=1000):
     return np.array(returns)
 
 @click.command()
-@click.option('--seed', default=5, help='Random seed.', type=int)
+@click.option('--seed', default=2, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=100000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
@@ -73,7 +73,7 @@ def evaluate(env, agent, visualise, episodes=1000):
 @click.option('--save-dir', default="results/platform", help='Output directory.', type=str)
 @click.option('--render-freq', default=50000, help='How often to render / save frames of an episode.', type=int)
 @click.option('--save-frames', default=False, help="Save render frames from the environment. Incompatible with visualise.", type=bool)
-@click.option('--visualise', default=True, help="Render game states. Incompatible with save-frames.", type=bool)
+@click.option('--visualise', default=False, help="Render game states. Incompatible with save-frames.", type=bool)
 @click.option('--title', default="PDDQN", help="Prefix of output files", type=str)
 @click.option('--train_interval', default=16, help="Double Learning for updating Q-value", type=int)
 @click.option('--ddqn', default=True, help="Double Learning for updating Q-value", type=bool)
@@ -94,7 +94,7 @@ def evaluate(env, agent, visualise, episodes=1000):
 @click.option('--iqn_num_cosines', default=64, help="IQN cosine number", type=int)
 @click.option('--iqn_embedding_layers', default='[32]', help='IQN embedding network', cls=ClickPythonLiteralOption)
 @click.option('--iqn_quantile_layers', default='[32,32]', help='IQN quantile network', cls=ClickPythonLiteralOption)
-@click.option('--evaluation_mode', default=True, help='Directly load the trained models for evaluation', type=bool)
+@click.option('--evaluation_mode', default=False, help='Directly load the trained models for evaluation', type=bool)
 @click.option('--load_model_idx', default=0, help='load the i-th modelUpdate for evaluation, only valid if evaluation_mode is True', type=int)
 def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradients, initial_memory_threshold,
         replay_memory_size, epsilon_steps, tau_actor, tau_actor_param, use_ornstein_noise, learning_rate_actor,
