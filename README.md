@@ -33,12 +33,18 @@ In the original implementation, the key equation for TD-target $`y`$ goes as:
 ```
 However, I refer to a minimalistic implementation of DDQN instead of really using two running and target networks, as MP-DQN finally learns the Q-value in discrete action space. And the equation is as follows:
 ```math
-    y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),
+    y = r + \gamma (1 - d) Q_{\phi'}(s', \text{argmax}_{a'}Q_{\phi}(s', \mu_{\theta}(s'))),
 ```
-where $`\mu_{\theta}'`$ stands for the running actor network and $`a' = \mu_{\theta}(s')`$ represents the action that maximizes the Q-value of $`s'`$ in the running network. This shares the same idea of DDQN.
-
+where $`\mu_{\theta}'`$ stands for the running actor network and $`a' = \mu_{\theta}(s')`$ represents the discrete action that maximizes the Q-value of $`s'`$ in the running Q-network. This shares the same idea of DDQN.
+<!--- Alternaitvely, one could do the following:
+```math
+    y = r + \gamma (1 - d) \min (Q_{\phi}(s', \mu_{\theta'}(s')),  Q_{\phi'}(s', \mu_{\theta'}(s')) ) ,
+```
+-->
 
 ### (3) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
+IQN learns the quantile values $`Z_{i}`$ at randomly selected quantile fractions $`\tau_{i}`$. It uses a Heavesided functions (staircase shaped functions) to approximate arbitrary inverse cumulative density function.  
+![IQN_illustration](figs/IQN.png)
 
 
 
@@ -57,12 +63,7 @@ The IS-ratio $`w`$ in the original work goes as:
 ```
 where $`N`$ refers to the current experience replay size, and $`P(i)`$ represents the probability of sampling data point $`i`$ according to priorities. For stability, the $`w_{i}`$ is furthere divided by $`w_{max}`$ as a normalization factor to make sure IS-ratio is less than or equal to $`1`$ and $`w_{max}`$ refers to the maiximal IS-ratio value among all the stored experience. 
 
-However, I found IS-ratio could result in a slow learning and osciallation in Q-value estimates due to the boostrapping nature. Therefore, I set IS-ratio for each samples to just be $`1`$, i.e., without "IS-ratio integration".
-
-
-
-
-
+However, I found IS-ratio could result in a slow learning and osciallation in Q-value estimates due to the boostrapped update. Therefore, I set IS-ratio for each samples to just be $`1`$, i.e., without "IS-ratio integration".
 
 
 
