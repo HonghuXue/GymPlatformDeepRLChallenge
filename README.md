@@ -47,7 +47,6 @@ IQN learns the quantile values $`Z_{i}`$ at randomly selected quantile fractions
 ![IQN_illustration](figs/IQN.png)
 
 
-
 ### (4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
 
 In this implementation, the noisy network is applied to DDPG/TD3 actor and Q-network. In the IQN mode, noisy network is applied to DDPG/TD3 actor, quantile network, state-action embedding network, but excluding the cosine network. Theoretically, cosine network could also use noisy network.
