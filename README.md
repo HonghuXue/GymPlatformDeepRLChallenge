@@ -53,9 +53,9 @@ In this implementation, the replay buffer size must be of the size $`2^n`$ (due 
 
 The IS-ratio $`w`$ in the original work goes as:
 ```math
-    w_{i} = \frac{\left( \frac{1}{N} \cdot \frac{1}{P(i)} \right)^{\beta}}{w_{max}},
+    w_{i} = \left( \frac{1}{N} \cdot \frac{1}{P(i)} \right)^{\beta},
 ```
-where $`N`$ refers to the current experience replay size, and $`P(i)`$ represents the probability of sampling data point $`i`$ according to priorities and $`w_{max}`$ refers to the maiximal IS-ratio value among all the stored experience. 
+where $`N`$ refers to the current experience replay size, and $`P(i)`$ represents the probability of sampling data point $`i`$ according to priorities. For stability, the $`w_{i}`$ is furthere divided by $`w_{max}`$ as a normalization factor to make sure IS-ratio is less than or equal to $`1`$ and $`w_{max}`$ refers to the maiximal IS-ratio value among all the stored experience. 
 
 However, I found IS-ratio could result in a slow learning and osciallation in Q-value estimates due to the boostrapping nature. Therefore, I set IS-ratio for each samples to just be $`1`$, i.e., without "IS-ratio integration".
 
