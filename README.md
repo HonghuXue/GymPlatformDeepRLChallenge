@@ -1,13 +1,27 @@
 #  Multi-Pass Deep Q-Networks
 
-This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) for parameterised action space MDPs (PAMDP), after referring to multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references):
+This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) for parameterised action space MDPs (PAMDP). Parameterised action spaces consist of a set of discrete actions $`\mathcal{A}_d \equiv[K]=\left\{k_1, k_2, \ldots, \left.k_K\right\}\right.`$, where each $`k`$ has a corresponding continuous action-parameter $`x_k \in \mathcal{X}_k \subseteq \mathbb{R}^{m_k}`$ with dimensionality $`m_{k}`$.
 
+There are multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references), and one state-of-the-art RL algorithm is Multi-Pass Deep Q-Networks (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/pdf/1905.04388.pdf). This repository is based on the  orignal MP-DQN implementation: https://github.com/cycraig/MP-DQN/tree/master, and includes new several features as potential performance enhancement. The model of MP-DQN is illustrated below:
 
+<p align="center">
+  <img src="figs/MP_DQN.png" alt="MP-DQN Model" height="300">
+</p>
 
-Multi-Pass Deep Q-Networks (MP-DQN) fixes the over-paramaterisation problem of P-DQN by splitting the action-parameter inputs to the Q-network using several passes (in a parallel batch). Split Deep Q-Networks (SP-DQN) is a much slower solution which uses multiple Q-networks with/without shared feature-extraction layers. A weighted-indexed action-parameter loss function is also provided for P-DQN.
+The key equation of MP-DQN:
+```math
+Q\left(s, k, x_k\right)=\underset{r, s^{\prime}}{\mathbb{E}}\left[r+\gamma \max _{k^{\prime}} \sup _{x_{k^{\prime}} \in \mathcal{X}_{k^{\prime}}} Q\left(s^{\prime}, k^{\prime}, x_{k^{\prime}}\right) \mid s, k, x_k\right].
+```
+
+To avoid the computationally intractable calculation of the supremum over $`\mathcal{X}_{k}`$, it is suggested using a determinitic actor $`x_k\left(s ; \theta_x\right): S \rightarrow \mathcal{X}_k,`$ to appoximate $`\text{argsup}_{x_k \in \mathcal{X}_k} Q\left(s, k, x_k\right)`$, when the Q function is fixed. This converts the original equation to 
+```math
+Q\left(s, k, x_k\right)=\underset{r, s^{\prime}}{\mathbb{E}}\left[r+\gamma \max _{k^{\prime}} Q\left(s^{\prime}, k^{\prime}, x_{k^{\prime}}^Q\left(s^{\prime}\right)\right) \mid s, k, x_k\right]
+```
+
+The Q-network will be updated similarly to DQN [[Mnih et al. 2015]](https://www.nature.com/articles/nature14236), and the actor will updated analogously to DDPG [[Lillicrap et al. 2016]](https://arxiv.org/pdf/1509.02971.pdf) .
 
 ## Additional Features from Honghu
-This repository is based on the following implementation: https://github.com/cycraig/MP-DQN/tree/master, which includes the orignal MP-DQN implementation.
+
 
 In additional to the original implementation, further improvements are integrated: **These improvements are in orthogonal directions and can be activated in a combinatorial manner.**
 
@@ -51,11 +65,9 @@ IQN learns the quantile values $`Z_{i}`$ at randomly selected quantile fractions
   <img src="figs/IQN_model.png" height="200">
 </div>
 
-
-
 ### (4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
 
-In this implementation, the noisy network is applied to DDPG/TD3 actor and Q-network. In the IQN mode, noisy network is applied to DDPG/TD3 actor, quantile network, state-action embedding network, but excluding the cosine network. Theoretically, cosine network could also use noisy network.
+In this implementation, the noisy network is applied to running & target DDPG/TD3 actor and running & target Q-network. In the IQN mode, noisy network is applied to running & target DDPG/TD3 actor, running & target quantile network, running & target state-action embedding network, but excluding the cosine network. Theoretically, cosine network could also use noisy network. The hyperparameters are set exactly as the original paper suggested.
 
 
 ### (5) Proportion-based Prioritized Experience Replay [[Schaul et al. 2015]](https://arxiv.org/abs/1511.05952)
