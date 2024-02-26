@@ -39,8 +39,8 @@ def evaluate(env, agent, visualise, episodes=1000):
     return np.array(returns)
 
 @click.command()
-@click.option('--seed', default=2, help='Random seed.', type=int)
-@click.option('--evaluation-episodes', default=100, help='Episodes over which to evaluate after training.', type=int)
+@click.option('--seed', default=1, help='Random seed.', type=int)
+@click.option('--evaluation-episodes', default=1000, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=100000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
 @click.option('--gamma', default=0.99, help='Discount factor.', type=float) # HH: Changed from 0.9 to 0.99
@@ -95,7 +95,7 @@ def evaluate(env, agent, visualise, episodes=1000):
 @click.option('--iqn_embedding_layers', default='[32]', help='IQN embedding network', cls=ClickPythonLiteralOption)
 @click.option('--iqn_quantile_layers', default='[32,32]', help='IQN quantile network', cls=ClickPythonLiteralOption)
 @click.option('--evaluation_mode', default=False, help='Directly load the trained models for evaluation', type=bool)
-@click.option('--load_model_idx', default=0, help='load the i-th modelUpdate for evaluation, only valid if evaluation_mode is True', type=int)
+@click.option('--load_model_idx', default=60000, help='load the i-th modelUpdate for evaluation, only valid if evaluation_mode is True', type=int)
 def run(seed, episodes, evaluation_episodes, batch_size, gamma, inverting_gradients, initial_memory_threshold,
         replay_memory_size, epsilon_steps, tau_actor, tau_actor_param, use_ornstein_noise, learning_rate_actor,
         learning_rate_actor_param, epsilon_final, zero_index_gradients, initialise_params, scale_actions,
