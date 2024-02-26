@@ -43,8 +43,14 @@ where $`\mu_{\theta}'`$ stands for the running actor network and $`a' = \mu_{\th
 -->
 
 ### (3) Implicit Quantile Network (IQN) to replace the Q-network with a distribution on Q estimates with a set of quantiles. [[Dabney et al. 2019]](https://arxiv.org/abs/1806.06923)
-IQN learns the quantile values $`Z_{i}`$ at randomly selected quantile fractions $`\tau_{i}`$. It uses a Heavesided functions (staircase shaped functions) to approximate arbitrary inverse cumulative density function.  
-![IQN_illustration](figs/IQN.png)
+IQN learns the quantile values $`Z_{i}`$ at randomly selected quantile fractions $`\tau_{i}`$. It uses a Heavesided functions (staircase shaped functions) to approximate arbitrary inverse cumulative density function. , coupled with the corresponding quantile loss. The IQN model consists of a state(-action) embedding network $`\psi`$, cosine embedding network $`\phi`$ and quantile network $`f`$, which is shown as follows:
+
+<div align="center">
+  <img src="figs/IQN.png" height="200">
+  <img src="figs/quantile_loss.png" height="200">
+  <img src="figs/IQN_model.png" height="200">
+</div>
+
 
 
 ### (4) Noisy Network for Exploration <!---(Additionally decouples the noise scaling for training and acting. The training procedure features a linear decay schedule for noise, so that the training can be accelerated. However it doesn't degrade the exploration as the noise for acting still assumes the original/undecayed noise. Note the noisy network module replaces the original exploration schedule of decaying epsilon-greedy algorithm and ornstein noise applied to DDPG actor)--> [[Fortunato et al. 2017]](https://arxiv.org/abs/1706.10295)
