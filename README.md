@@ -18,7 +18,7 @@ To avoid the computationally intractable calculation of the supremum over $`\mat
 Q\left(s, k, x_k\right)=\underset{r, s^{\prime}}{\mathbb{E}}\left[r+\gamma \max _{k^{\prime}} Q\left(s^{\prime}, k^{\prime}, x_{k^{\prime}}^Q\left(s^{\prime}\right)\right) \mid s, k, x_k\right]
 ```
 
-The Q-network will be updated similarly to DQN [[Mnih et al. 2015]](https://www.nature.com/articles/nature14236), and the actor will updated analogously to DDPG [[Lillicrap et al. 2016]](https://arxiv.org/pdf/1509.02971.pdf) .
+The Q-network will be updated similarly to DQN [[Mnih et al. 2015]](https://www.nature.com/articles/nature14236), and the actor will updated analogously to DDPG [[Lillicrap et al. 2016]](https://arxiv.org/pdf/1509.02971.pdf).
 
 ## Additional Features from Honghu
 
@@ -176,15 +176,18 @@ Monitor the loss function to avoid divergence
 The evolution of the estimated Q-values are reasonable as the episodic return lies between 0 and 1. When consiering the the discount factor = 0.99, the estimated Q-value should be within this range.
 
 ## Evaluation Animation
+The trained agent is evalauted over $`1000`$ episodes, the final episodic return is $`1.0 \pm 0.0`$. 
 
 Trained policy after 20K episodes of training
 
 ![evaluation_20000epi](runs/evaluation_20000.gif)
 
 
-Trained policy after ~2 million frames a.k.a 60K episodes of training
+Trained policy after ~2M frames a.k.a 60K episodes of training
 
 ![evaluation_60000epi](runs/evaluation.gif)
+
+
 
 References
 ----------
