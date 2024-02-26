@@ -724,97 +724,97 @@ class PDQNAgent(Agent):
 
             with torch.no_grad():
                 # -----First DDQN mode: y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),------
-                # # Calculate Q values of next states.
-                # if self.double_learning:
-                #     # ------First get the Q-max from the online network: next_q = self.online_net.calculate_q(states=next_states) # (Batch, |A|)------
-                #     pred_next_action_parameters = self.actor_param.forward(next_states)
-                #     next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
-                #                                               running_network=True)
-                #     # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
-                #     # Calculate expectations of value distribution.
-                #     next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(
-                #         dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
-                #     # -----------------------------------------------------------------------------------
-                # else:  # Normal Quantile learning, not double learning
-                #     pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                #     # ------ HH: add TD3 policy noise------
-                #     if self.td3_target_policy_smoothing:
-                #         pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
-                #                                                                 running_actor_param_network=False)
-                #     next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
-                #                                               running_network=False)
-                #     # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
-                #
-                #     # Calculate expectations of value distribution.
-                #     next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(
-                #         dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
-                #     # ------------------------------------------------
-                # # Calculate greedy actions.
-                # next_actions = torch.argmax(next_q, dim=1, keepdim=False)  # assert next_actions.shape == (self.batch_size, 1)
-                # # Calculate features of next states.
-                # if self.double_learning:
-                #     # --------next_state_embeddings = self.target_net.calculate_state_embeddings(next_states)---------
-                #     pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                #     # ------ HH: add TD3 policy noise------
-                #     if self.td3_target_policy_smoothing:
-                #         pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
-                #                                                                 running_actor_param_network=False)
-                #     next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
-                #                                               running_network=False)
-                #     # ------------------------------------------------------------------------------------------------
-                #
-                # # Calculate quantile values of next states and next actions.
-                # next_sa_quantiles = evaluate_quantile_at_action(next_quantiles, next_actions).transpose(1,
-                #                                                                                         2)  # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-                #
-                # # Calculate target quantile values.
-                # target_sa_quantiles = rewards[..., None, None] + (1.0 - terminals[
-                #     ..., None, None]) * self.gamma * next_sa_quantiles  # assert target_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
+                # Calculate Q values of next states.
+                if self.double_learning:
+                    # ------First get the Q-max from the online network: next_q = self.online_net.calculate_q(states=next_states) # (Batch, |A|)------
+                    pred_next_action_parameters = self.actor_param.forward(next_states)
+                    next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
+                                                              running_network=True)
+                    # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
+                    # Calculate expectations of value distribution.
+                    next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(
+                        dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
+                    # -----------------------------------------------------------------------------------
+                else:  # Normal Quantile learning, not double learning
+                    pred_next_action_parameters = self.actor_param_target.forward(next_states)
+                    # ------ HH: add TD3 policy noise------
+                    if self.td3_target_policy_smoothing:
+                        pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
+                                                                                running_actor_param_network=False)
+                    next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
+                                                              running_network=False)
+                    # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
 
-                # ---- Alternative DDQN: y = r + \gamma (1 - d) \min (Q_{\phi}(s', \mu_{\theta'}(s')),  Q_{\phi'}(s', \mu_{\theta'}(s')) ) ----
+                    # Calculate expectations of value distribution.
+                    next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(
+                        dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
+                    # ------------------------------------------------
+                # Calculate greedy actions.
+                next_actions = torch.argmax(next_q, dim=1, keepdim=False)  # assert next_actions.shape == (self.batch_size, 1)
+                # Calculate features of next states.
+                if self.double_learning:
+                    # --------next_state_embeddings = self.target_net.calculate_state_embeddings(next_states)---------
+                    pred_next_action_parameters = self.actor_param_target.forward(next_states)
+                    # ------ HH: add TD3 policy noise------
+                    if self.td3_target_policy_smoothing:
+                        pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
+                                                                                running_actor_param_network=False)
+                    next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
+                                                              running_network=False)
+                    # ------------------------------------------------------------------------------------------------
 
-                pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                if self.td3_target_policy_smoothing:
-                    pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
-                                                                            running_actor_param_network=False)
-                next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
-                                                          running_network=False)
-                # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
-                # Calculate expectations of value distribution.
-                next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(dim=1)
-                # assert q.shape == (self.batch_size, self.num_actions)
-                next_actions = torch.argmax(next_q, dim=1, keepdim=False)
-                # assert next_actions.shape == (self.batch_size, 1)
+                # Calculate quantile values of next states and next actions.
                 next_sa_quantiles = evaluate_quantile_at_action(next_quantiles, next_actions).transpose(1,
                                                                                                         2)  # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
 
-                if self.double_learning:
-                    next_quantiles_running = self.calculate_quantiles(next_states, pred_next_action_parameters,
-                                                                      next_tau_hats, running_network=True)
-                    next_q_running = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles_running).sum(dim=1)
-                    next_actions_running = torch.argmax(next_q_running, dim=1, keepdim=False)
-                    # -----Determine min{Q_run(s',a'), Q_tar(s',a')}-----
-                    next_q_min = torch.max(next_q, dim=1, keepdim=True)[0]
-                    next_q_min_running = torch.max(next_q_running, dim=1, keepdim=True)[0]
-                    assert next_q_min.shape == (self.batch_size, 1)
-                    # Use torch.lt to get a boolean tensor where tensor1 < tensor2
-                    is_tensor1_smaller = torch.lt(next_q_min, next_q_min_running)
-                    chosen_indices = torch.where(is_tensor1_smaller, torch.zeros_like(next_q_min, dtype=torch.long),
-                                                 torch.ones_like(next_q_min_running, dtype=torch.long))
-                    # assert chosen_indices.shape == (self.batch_size, 1)
-                    next_sa_quantiles_running = evaluate_quantile_at_action(next_quantiles_running, next_actions_running).transpose(1, 2)
-                    next_sa_quantiles = evaluate_quantile_at_action(next_quantiles, next_actions).transpose(1,2)
-                    # assert next_sa_quantiles_running.shape == (self.batch_size, 1, self.N_dash)
-                    # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-                    # ---overwrite next_sa_quantiles, integrate the min logic here---
-                    next_sa_quantiles = torch.where(chosen_indices.unsqueeze(-1) == 1, next_sa_quantiles, next_sa_quantiles_running)
-                    # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
                 # Calculate target quantile values.
-                target_sa_quantiles = rewards[..., None, None] + (1.0 - terminals[..., None, None]) * self.gamma * next_sa_quantiles
-                # assert target_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
+                target_sa_quantiles = rewards[..., None, None] + (1.0 - terminals[
+                    ..., None, None]) * self.gamma * next_sa_quantiles  # assert target_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
+
+                # # ---- Alternative DDQN: y = r + \gamma (1 - d) \min (Q_{\phi}(s', \mu_{\theta'}(s')),  Q_{\phi'}(s', \mu_{\theta'}(s')) ) ----
+                # # ---- However, tested on seed 1&3, alternative DDQN only converges to return = 0.3 and with huber quantile loss approaching 0----
+                # pred_next_action_parameters = self.actor_param_target.forward(next_states)
+                # if self.td3_target_policy_smoothing:
+                #     pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
+                #                                                             running_actor_param_network=False)
+                # next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
+                #                                           running_network=False)
+                # # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
+                # # Calculate expectations of value distribution.
+                # next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(dim=1)
+                # # assert q.shape == (self.batch_size, self.num_actions)
+                # next_actions = torch.argmax(next_q, dim=1, keepdim=False)
+                # # assert next_actions.shape == (self.batch_size, 1)
+                # next_sa_quantiles = evaluate_quantile_at_action(next_quantiles, next_actions).transpose(1, 2)
+                # # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
+                #
+                # if self.double_learning:
+                #     next_quantiles_running = self.calculate_quantiles(next_states, pred_next_action_parameters,
+                #                                                       next_tau_hats, running_network=True)
+                #     next_q_running = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles_running).sum(dim=1)
+                #     next_actions_running = torch.argmax(next_q_running, dim=1, keepdim=False)
+                #     # -----Determine min{Q_run(s',a'), Q_tar(s',a')}-----
+                #     next_q_max = torch.max(next_q, dim=1, keepdim=True)[0]
+                #     next_q_max_running = torch.max(next_q_running, dim=1, keepdim=True)[0]
+                #     # assert next_q_max.shape == (self.batch_size, 1)
+                #     # Use torch.lt to get a boolean tensor where tensor1 < tensor2
+                #     is_tensor1_smaller = torch.lt(next_q_max, next_q_max_running)
+                #     chosen_indices = torch.where(is_tensor1_smaller, torch.zeros_like(next_q_max, dtype=torch.long),
+                #                                  torch.ones_like(next_q_max_running, dtype=torch.long))
+                #     # assert chosen_indices.shape == (self.batch_size, 1)
+                #     next_sa_quantiles_running = evaluate_quantile_at_action(next_quantiles_running, next_actions_running).transpose(1, 2)
+                #     # assert next_sa_quantiles_running.shape == (self.batch_size, 1, self.N_dash)
+                #     # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
+                #     # ---overwrite next_sa_quantiles, integrate the min logic here---
+                #     final_sa_quantiles = torch.where(chosen_indices.unsqueeze(-1) == 1, next_sa_quantiles, next_sa_quantiles_running)
+                #     next_sa_quantiles = final_sa_quantiles
+                #     # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
+                #
+                # # Calculate target quantile values.
+                # target_sa_quantiles = rewards[..., None, None] + (1.0 - terminals[..., None, None]) * self.gamma * next_sa_quantiles
+                # # assert target_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
 
                 # ---------------------------------------------------------------------
-
 
             td_errors = target_sa_quantiles.detach() - current_sa_quantiles  # assert td_errors.shape == (self.batch_size, self.N, self.N_dash)
             errors = td_errors.detach().abs().sum(dim=1).mean(dim=1,

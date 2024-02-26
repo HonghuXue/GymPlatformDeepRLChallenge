@@ -39,7 +39,7 @@ def evaluate(env, agent, visualise, episodes=1000):
     return np.array(returns)
 
 @click.command()
-@click.option('--seed', default=1, help='Random seed.', type=int)
+@click.option('--seed', default=3, help='Random seed.', type=int)
 @click.option('--evaluation-episodes', default=1000, help='Episodes over which to evaluate after training.', type=int)
 @click.option('--episodes', default=100000, help='Number of episodes.', type=int)
 @click.option('--batch-size', default=128, help='Minibatch size.', type=int)
