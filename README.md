@@ -1,8 +1,8 @@
-#  Multi-Pass Deep Q-Networks
+#  Solving Platform-v0 with Multi-Pass Deep Q-Networks
 
-This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) for parameterised action space MDPs (PAMDP). Parameterised action spaces consist of a set of discrete actions $`\mathcal{A}_d \equiv[K]=\left\{k_1, k_2, \ldots, \left.k_K\right\}\right.`$, where each $`k`$ has a corresponding continuous action-parameter $`x_k \in \mathcal{X}_k \subseteq \mathbb{R}^{m_k}`$ with dimensionality $`m_{k}`$.
+This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) and potential enhancements for a parameterised action space MDP (PAMDP), specifically the environment "Platform-v0". Parameterised action spaces consist of a set of discrete actions $`\mathcal{A}_d \equiv[K]=\left\{k_1, k_2, \ldots, \left.k_K\right\}\right.`$, where each $`k`$ has a corresponding continuous action-parameter $`x_k \in \mathcal{X}_k \subseteq \mathbb{R}^{m_k}`$ with dimensionality $`m_{k}`$.
 
-There are multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references), and one state-of-the-art RL algorithm is Multi-Pass Deep Q-Networks (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/pdf/1905.04388.pdf). This repository is based on the  orignal MP-DQN implementation: https://github.com/cycraig/MP-DQN/tree/master, and includes new several features as potential performance enhancement. The model of MP-DQN is illustrated below:
+There are multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references), and one state-of-the-art RL algorithm is Multi-Pass Deep Q-Networks (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/pdf/1905.04388.pdf). This repository is based on the orignal **MP-DQN** implementation: https://github.com/cycraig/MP-DQN/tree/master, and includes several new features as potential performance enhancement. The model of MP-DQN is illustrated below:
 
 <p align="center">
   <img src="figs/MP_DQN.png" alt="MP-DQN Model" height="300">
@@ -32,7 +32,7 @@ DDQN is introduced to cancel maximization bias. The key equation for TD-target $
 ```
 where $`\phi`$ and $`\phi'`$ denote the parameters of running network and target network respectively.
 
-### (2) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
+### (2) Twin-Delayed DDPG (TD3) to replace the original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
 
 **target policy smoothing**: Actions used to form the Q-learning target are based on the target policy, $`\mu_{\theta_{\text{targ}}}`$, but with clipped noise added on each dimension of the action. After adding the clipped noise, the target action is then clipped to lie in the valid action range (all valid actions, $`a`$, satisfy $`a_{Low} \leq a \leq a_{High})`$. The target actions are thus: 
 
@@ -197,8 +197,15 @@ Trained policy after ~2M frames a.k.a 60K episodes of training
 References
 ----------
 
-[1] [PA-DDPG](https://arxiv.org/abs/1511.04143)    
-[2] [Q-PAMDP](https://arxiv.org/abs/1509.01644)  
-[3] [P-DQN](https://arxiv.org/abs/1810.06394)   
+[1] [PA-DDPG](https://arxiv.org/abs/1511.04143.pdf)  
+[2] [Q-PAMDP](https://arxiv.org/abs/1509.01644.pdf)  
+[3] [P-DQN](https://arxiv.org/abs/1810.06394.pdf)   
+[4] [DQN](https://www.nature.com/articles/nature14236)  
+[5] [DDQN](https://arxiv.org/abs/1509.06461.pdf)  
+[6] [DDPG](https://arxiv.org/abs/1706.10295.pdf)  
+[7] [TD3](https://arxiv.org/pdf/1802.09477.pdf)  
+[8] [PER](https://arxiv.org/abs/1511.05952.pdf)  
+[9] [IQN](https://arxiv.org/abs/1806.06923.pdf)  
+[10] [Noisy network for exploration](https://arxiv.org/abs/1706.10295.pdf)  
 
 
