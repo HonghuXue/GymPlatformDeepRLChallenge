@@ -653,8 +653,7 @@ class PDQNAgent(Agent):
 
         if not self.IQN:  # ---DQN mode----
             # -- First compute the td-targets, no gradient required--
-            # HH:---original implementation: DQN----
-            if not self.double_learning:
+            if not self.double_learning:# ---original implementation: DQN----
                 with torch.no_grad():
                     pred_next_action_parameters = self.actor_param_target.forward(next_states)
                     # ------ HH: add TD3 policy noise------
