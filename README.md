@@ -1,4 +1,4 @@
-#  Multi-Pass Deep Q-Networks
+#  Solving Platform-v0 with Multi-Pass Deep Q-Networks
 
 This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) and potential enhancements for a parameterised action space MDP (PAMDP), specifically the environment "Platform-v0". Parameterised action spaces consist of a set of discrete actions $`\mathcal{A}_d \equiv[K]=\left\{k_1, k_2, \ldots, \left.k_K\right\}\right.`$, where each $`k`$ has a corresponding continuous action-parameter $`x_k \in \mathcal{X}_k \subseteq \mathbb{R}^{m_k}`$ with dimensionality $`m_{k}`$.
 
