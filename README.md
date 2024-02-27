@@ -32,7 +32,7 @@ DDQN is introduced to cancel maximization bias. The key equation for TD-target $
 ```
 where $`\phi`$ and $`\phi'`$ denote the parameters of running network and target network respectively.
 
-### (2) Twin-Delayed DDPG (TD3) to replace hthe original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
+### (2) Twin-Delayed DDPG (TD3) to replace the original module of DDPG-actor, where target policy smoothing and delayed policy updates are implemented. [[Fujimoto et al. 2018]](https://arxiv.org/pdf/1802.09477.pdf)
 
 **target policy smoothing**: Actions used to form the Q-learning target are based on the target policy, $`\mu_{\theta_{\text{targ}}}`$, but with clipped noise added on each dimension of the action. After adding the clipped noise, the target action is then clipped to lie in the valid action range (all valid actions, $`a`$, satisfy $`a_{Low} \leq a \leq a_{High})`$. The target actions are thus: 
 
@@ -197,8 +197,15 @@ Trained policy after ~2M frames a.k.a 60K episodes of training
 References
 ----------
 
-[1] [PA-DDPG](https://arxiv.org/abs/1511.04143)    
-[2] [Q-PAMDP](https://arxiv.org/abs/1509.01644)  
-[3] [P-DQN](https://arxiv.org/abs/1810.06394)   
+[1] [PA-DDPG](https://arxiv.org/abs/1511.04143.pdf)  
+[2] [Q-PAMDP](https://arxiv.org/abs/1509.01644.pdf)  
+[3] [P-DQN](https://arxiv.org/abs/1810.06394.pdf)   
+[4] [DQN](https://www.nature.com/articles/nature14236)  
+[5] [DDQN](https://arxiv.org/abs/1509.06461.pdf)  
+[6] [DDPG](https://arxiv.org/abs/1706.10295.pdf)  
+[7] [TD3](https://arxiv.org/pdf/1802.09477.pdf)  
+[8] [PER](https://arxiv.org/abs/1511.05952.pdf)  
+[9] [IQN](https://arxiv.org/abs/1806.06923.pdf)  
+[10] [Noisy network for exploration](https://arxiv.org/abs/1706.10295.pdf)  
 
 
