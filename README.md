@@ -2,7 +2,7 @@
 
 This repository includes a state-of-the-art DRL algorithm solution (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/abs/1905.04388) for parameterised action space MDPs (PAMDP). Parameterised action spaces consist of a set of discrete actions $`\mathcal{A}_d \equiv[K]=\left\{k_1, k_2, \ldots, \left.k_K\right\}\right.`$, where each $`k`$ has a corresponding continuous action-parameter $`x_k \in \mathcal{X}_k \subseteq \mathbb{R}^{m_k}`$ with dimensionality $`m_{k}`$.
 
-There are multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references), and one state-of-the-art RL algorithm is Multi-Pass Deep Q-Networks (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/pdf/1905.04388.pdf). This repository is based on the  orignal MP-DQN implementation: https://github.com/cycraig/MP-DQN/tree/master, and includes new several features as potential performance enhancement. The model of MP-DQN is illustrated below:
+There are multiple PAMDP RL algorithms PA-DDPG[[1]](#references), Q-PAMDP[[2]](#references), P-DQN[[3]](#references), and one state-of-the-art RL algorithm is Multi-Pass Deep Q-Networks (MP-DQN)[[Bester et al. 2019]](https://arxiv.org/pdf/1905.04388.pdf). This repository is based on the  orignal MP-DQN implementation: https://github.com/cycraig/MP-DQN/tree/master, and includes several new features as potential performance enhancement. The model of MP-DQN is illustrated below:
 
 <p align="center">
   <img src="figs/MP_DQN.png" alt="MP-DQN Model" height="300">
