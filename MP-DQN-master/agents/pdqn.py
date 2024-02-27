@@ -663,9 +663,7 @@ class PDQNAgent(Agent):
                                                                                 running_actor_param_network=False)
                     pred_Q_a = self.actor_target(next_states, pred_next_action_parameters)
                     Qprime = torch.max(pred_Q_a, 1, keepdim=True)[0].squeeze()
-            # HH:---Proposed implementation :DDQN---
-            else:
-                # -----First DDQN mode: y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),------
+            else:#  -Proposed implementation :DDQN-
                 with torch.no_grad():
                     pred_next_action_parameters_running = self.actor_param.forward(next_states)
                     pred_next_action_parameters = self.actor_param_target.forward(next_states)
@@ -675,18 +673,6 @@ class PDQNAgent(Agent):
                     pred_Q_a_tmp = self.actor(next_states, pred_next_action_parameters_running)
                     pred_Q_a = self.actor_target(next_states, pred_next_action_parameters)
                     Qprime = pred_Q_a.gather(1, torch.max(pred_Q_a_tmp, 1)[1].unsqueeze(1)).squeeze(1)
-
-                # ----Alternative DDQN: y = r + \gamma (1 - d) \min (Q_{\phi}(s', \mu_{\theta'}(s')),  Q_{\phi'}(s', \mu_{\theta'}(s')) ) -----
-                # with torch.no_grad():
-                #     pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                #     if self.td3_target_policy_smoothing:
-                #         pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
-                #                                                                 running_actor_param_network=False)
-                #     pred_Q_a_run = self.actor(next_states, pred_next_action_parameters)
-                #     Qprime_run = torch.max(pred_Q_a_run, 1, keepdim=True)[0].squeeze()
-                #     pred_Q_a_target = self.actor_target(next_states, pred_next_action_parameters)
-                #     Qprime_target = torch.max(pred_Q_a_target, 1, keepdim=True)[0].squeeze()
-                #     Qprime = torch.min(Qprime_target, Qprime_run)
 
             # Compute the TD error
             with torch.no_grad():
@@ -723,7 +709,6 @@ class PDQNAgent(Agent):
             # assert current_sa_quantiles.shape == (self.batch_size, self.N, 1)
 
             with torch.no_grad():
-                # -----First DDQN mode: y = r + \gamma (1 - d) Q_{\phi'}(s', \mu_{\theta}(s')),------
                 # Calculate Q values of next states.
                 if self.double_learning:
                     # ------First get the Q-max from the online network: next_q = self.online_net.calculate_q(states=next_states) # (Batch, |A|)------
@@ -733,21 +718,19 @@ class PDQNAgent(Agent):
                     # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
                     # Calculate expectations of value distribution.
                     next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(
-                        dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
-                    # -----------------------------------------------------------------------------------
+                        dim=1)
+                    # assert q.shape == (self.batch_size, self.num_actions)
                 else:  # Normal Quantile learning, not double learning
                     pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                    # ------ HH: add TD3 policy noise------
+                    #  Add TD3 policy noise
                     if self.td3_target_policy_smoothing:
                         pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
                                                                                 running_actor_param_network=False)
                     next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
                                                               running_network=False)
-                    # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
-
                     # Calculate expectations of value distribution.
                     next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(
-                        dim=1)  # assert q.shape == (self.batch_size, self.num_actions)
+                        dim=1)
                     # ------------------------------------------------
                 # Calculate greedy actions.
                 next_actions = torch.argmax(next_q, dim=1, keepdim=False)  # assert next_actions.shape == (self.batch_size, 1)
@@ -755,7 +738,7 @@ class PDQNAgent(Agent):
                 if self.double_learning:
                     # --------next_state_embeddings = self.target_net.calculate_state_embeddings(next_states)---------
                     pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                    # ------ HH: add TD3 policy noise------
+                    # Add TD3 policy noise
                     if self.td3_target_policy_smoothing:
                         pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
                                                                                 running_actor_param_network=False)
@@ -766,55 +749,9 @@ class PDQNAgent(Agent):
                 # Calculate quantile values of next states and next actions.
                 next_sa_quantiles = evaluate_quantile_at_action(next_quantiles, next_actions).transpose(1,
                                                                                                         2)  # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-
                 # Calculate target quantile values.
                 target_sa_quantiles = rewards[..., None, None] + (1.0 - terminals[
                     ..., None, None]) * self.gamma * next_sa_quantiles  # assert target_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-
-                # # ---- Alternative DDQN: y = r + \gamma (1 - d) \min (Q_{\phi}(s', \mu_{\theta'}(s')),  Q_{\phi'}(s', \mu_{\theta'}(s')) ) ----
-                # # ---- However, tested on seed 1&3, alternative DDQN only converges to return = 0.3 and with huber quantile loss approaching 0----
-                # pred_next_action_parameters = self.actor_param_target.forward(next_states)
-                # if self.td3_target_policy_smoothing:
-                #     pred_next_action_parameters = self.TD3_policy_smoothing(pred_next_action_parameters,
-                #                                                             running_actor_param_network=False)
-                # next_quantiles = self.calculate_quantiles(next_states, pred_next_action_parameters, next_tau_hats,
-                #                                           running_network=False)
-                # # assert next_quantiles.shape == (self.batch_size, self.N, self.num_actions)
-                # # Calculate expectations of value distribution.
-                # next_q = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles).sum(dim=1)
-                # # assert q.shape == (self.batch_size, self.num_actions)
-                # next_actions = torch.argmax(next_q, dim=1, keepdim=False)
-                # # assert next_actions.shape == (self.batch_size, 1)
-                # next_sa_quantiles = evaluate_quantile_at_action(next_quantiles, next_actions).transpose(1, 2)
-                # # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-                #
-                # if self.double_learning:
-                #     next_quantiles_running = self.calculate_quantiles(next_states, pred_next_action_parameters,
-                #                                                       next_tau_hats, running_network=True)
-                #     next_q_running = ((next_taus[:, 1:, None] - next_taus[:, :-1, None]) * next_quantiles_running).sum(dim=1)
-                #     next_actions_running = torch.argmax(next_q_running, dim=1, keepdim=False)
-                #     # -----Determine min{Q_run(s',a'), Q_tar(s',a')}-----
-                #     next_q_max = torch.max(next_q, dim=1, keepdim=True)[0]
-                #     next_q_max_running = torch.max(next_q_running, dim=1, keepdim=True)[0]
-                #     # assert next_q_max.shape == (self.batch_size, 1)
-                #     # Use torch.lt to get a boolean tensor where tensor1 < tensor2
-                #     is_tensor1_smaller = torch.lt(next_q_max, next_q_max_running)
-                #     chosen_indices = torch.where(is_tensor1_smaller, torch.zeros_like(next_q_max, dtype=torch.long),
-                #                                  torch.ones_like(next_q_max_running, dtype=torch.long))
-                #     # assert chosen_indices.shape == (self.batch_size, 1)
-                #     next_sa_quantiles_running = evaluate_quantile_at_action(next_quantiles_running, next_actions_running).transpose(1, 2)
-                #     # assert next_sa_quantiles_running.shape == (self.batch_size, 1, self.N_dash)
-                #     # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-                #     # ---overwrite next_sa_quantiles, integrate the min logic here---
-                #     final_sa_quantiles = torch.where(chosen_indices.unsqueeze(-1) == 1, next_sa_quantiles, next_sa_quantiles_running)
-                #     next_sa_quantiles = final_sa_quantiles
-                #     # assert next_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-                #
-                # # Calculate target quantile values.
-                # target_sa_quantiles = rewards[..., None, None] + (1.0 - terminals[..., None, None]) * self.gamma * next_sa_quantiles
-                # # assert target_sa_quantiles.shape == (self.batch_size, 1, self.N_dash)
-
-                # ---------------------------------------------------------------------
 
             td_errors = target_sa_quantiles.detach() - current_sa_quantiles  # assert td_errors.shape == (self.batch_size, self.N, self.N_dash)
             errors = td_errors.detach().abs().sum(dim=1).mean(dim=1,
@@ -842,11 +779,7 @@ class PDQNAgent(Agent):
         # ---------------------- optimize actor ----------------------
         # states, action_params, tau_hats
         if self.updates % self.delayed_policy_update == self.delayed_policy_update - 1:
-            # if self.noisy_network:
-            #     self.actor_param.sample_noise(self.noisy_network_noise_decay)
-            #     self.actor_param_target.sample_noise(self.noisy_network_noise_decay)
-
-            # --HH:  -Integrate delayed states-
+            # Integrate the skipped experience that are not trained due to delayed policy update
             try:  # for the case of delayed_policy_update > 1
                 states = torch.cat((self.state_policy_delayed, states), 0)
                 weights = torch.cat((self.weights, weights), 0)
